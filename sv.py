@@ -235,36 +235,26 @@ su = ttk.Button(pim, text='Exit', command=pim.destroy)
 su.place(x=650, y=550)
 
 # emailaddresses for email entry
+is_email_valid = False
+item = ('@hotmail', '@hotmail', '@yahoo', '@gmail', '@outlook')
+email = emailE.get()
 
-item = ['@hotmail', '@hotmail', '@yahoo', '@gmail', '@outlook']
-
-def is_email_valid():
-	if (emailE.get()) not in item:
-		Valid_email = messagebox.showinfo(title="email", message="Please enter a valid emailaddress")
-		Valid_email.place(x=470, y=65) 
-		save_Alldata(), credentials() 
-	
-	elif (emailE.get()) in item:
-		save_Alldata(), credentials()
-
-
-if is_email_valid() == True:
-	emptyEy1() == False
-
-elif is_email_valid() == False:
-	emptyEy1() == True
-	
+def valid_or_not():
+    # add this line and tell me what it prints
+    print(email)
+    if email.endswith(item): # this method only takes a string or tuple, you would want to use a tuple as the items variable as i did in line 2 or convert it to tuple before passing
+        is_email_valid = True
+        save_Alldata(), credentials()
+    else:
+        messagebox.showinfo(title="email", message="Please enter a valid emailaddress")
+    
 submitB = ttk.Button(
-	pim,
-	text ='Confirm',
-	command= lambda: (
-		emptyEy1(),
-		is_email_valid() 	
-			
-	)
+    pim,
+    text ='Confirm',
+    command= lambda: (
+        valid_or_not()
+    )
 )
-submitB.place(x=540, y=550)
-
 	
 
 # keep it displayed
