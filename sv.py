@@ -88,9 +88,7 @@ repassE= ttk.Entry(pim, background='white', font=(20))
 repassE.place(x=490, y=425, width=250, height= 35)
 
 
-# Writing to database
-
-
+# iterating to database
 filenameReg = "C:\VS Code\Python\Sublime\Tkinter\DbTOSv.json"
 def view_data():
     with open(filenameReg, "r") as f:
@@ -109,12 +107,7 @@ def view_data():
                 print("dear keyerror, there really is no keyerror")
             
 
-
-
-
-
-           
-           
+# appending to json data
 item_Data_Reg = {}
 def append_data():
     with open(filenameReg, "r") as file:
@@ -141,61 +134,6 @@ def append_data():
                  file.close()
 
              
-    
-# append data should be added to the submit button and append data log should be added 
-# in nodata
-#### ---- here i left of.
-        
-
-"""
-# A button and a Function
-def save_Alldata():
-    textInEy1 = Ey1.get().strip()
-    textInEy2 = lastnameE.get().strip()
-    textInEy3 = ageS.get().strip()
-    textInEy4 = emailE.get().strip()
-    textInEy5 = usrE.get().strip()
-    textInEy6 = passE.get().strip()
-    textInEy7 = repassE.get().strip()
-"""
-
-"""
-    #Writing the data to a txt file
-    if textInEy1:
-        op = open('futuredatabase.txt', 'a+')	
-        op.write('\n')
-        op.write(textInEy1)
-        op.write('\n')
-
-        op.write('\n')
-        op.write(textInEy2)
-        
-        op.write('\n')
-        op.write(textInEy3)
-        
-        op.write('\n')
-        op.write(textInEy4)
-        
-        op.write('\n')
-        op.write(textInEy5)
-        
-        op.write('\n')
-        op.write(textInEy6)
-    
-       # op.write('\n')
-        #op.write(textInEy7)
-        op.close()
-
-        # clearing the entry. 
-        Ey1.delete(0, 'end')
-        lastnameE.delete(0, 'end')
-        ageS.delete(0, 'end')
-        emailE.delete(0, 'end')
-        usrE.delete(0, 'end')
-        passE.delete(0, 'end')
-        repassE.delete(0, 'end')
-        op.close()
-"""
 
 # Error if submitting when empty entries
 def emptyEy1():
@@ -310,23 +248,9 @@ def append_data_in_Log(load_Data_Log=load_Data_Log):
         
         with open(filenameLog, "w") as fil:
             json.dump(load_Data_Log, fil, indent = 4)
-            usernameE.delete(0, "end")
-            Login_passwordE.delete(0, "end")
             fil.close()
         
         
-
-      #  try:
-          #  if a == item_data["username"] in append_data():
-              #  return True
-           # elif a != item_data["username"] in append_data():
-               # tk.showwarning(title= 'It is a sin that you tried that', text='Please enter credentials alike the one you created')       
-                #file.close()
-            #else:
-              #  return False
-        #except Exception as k:
-         #   return False
-          #  print("It went something wrong in 'append_data func' ")
 
 
 def submission_text():
@@ -338,7 +262,21 @@ aware = ttk.Label(root, text = "", background = '#6974C1',  font=('Times New Rom
 #root.wm_attributes("-transparentcolor", '#6974C1' )
 aware.place(x = 300, y= 385)
 
+# Check note
+"""
+1- get contents of username field x
+2- loop over the database looking for that username x
+3- if the username is not in the database show an error, else advance to step 4 x
+4- get the contents of the password field, then look for the password assigned to the username mentioned before x
+5- if the password doesnt matches the one assigned to the username show an error, else advance to step 6 x
+6- finally grant access to the user x
+"""
+
+
+mmx,mmy = None,None
 def Nodata():
+    global mmx,mmy
+    mmx,mmy = usernameE.get(),Login_passwordE.get()
     if len(usernameE.get()) and len(Login_passwordE.get())== 0:
         Passcred = messagebox.showerror(title="Error", message="Please enter credentials")
 
@@ -349,142 +287,27 @@ def Nodata():
         Passcred = messagebox.showerror(title="Error", message="Please enter credentials")
     
     else:
-        submission_text(), view_data_Log()
+         view_data_Log()
+         print("success")
 
-"""
-def NotEqualsUsername():
-          Cant_accept = ""
-          for widget in item_Data_Log["username"], item_Data_Reg["Username"], item_Data_Log["password"] and item_Data_Reg["password"]:
-                if item_Data_Log["username"] != item_Data_Reg["Username"]:
-                    not submission_text() and append_data_in_Log()
-                    Cant_accept = "Please enter credentials alike the ones you created"
-                    print(item_Data_Log["username"], item_Data_Reg["Username"])
-                      
-                print("Access denied", bool(Cant_accept))
-                
-                if not Cant_accept and item_Data_Log["password"] != item_Data_Reg["password"]:
-                      Cant_accept = "Please enter the password you created"
-                break
-            
-          if Cant_accept:
-              messagebox.showerror(title="Error", message= Cant_accept)
-                 
-          else:
-                Save_Or_ShowPrompt()
-                return
-"""
 
 def Save_Or_ShowPrompt(load_Data_Log = load_Data_Log):
+    global mmx,mmy
+    item_Data_Reg["Username"]=mmx
+    item_Data_Reg["password"]=mmy
     try:
-        if item_Data_Reg["Username"] not in [n["Username"] for n in load_Data_Log[::2]]:
-            messagebox.showwarning(tilte= 'Error', message = "Username not found")
+        if item_Data_Reg["Username"] not in [n["Username"] for n in load_Data_Log if len(n) > 2]:
+            messagebox.showwarning(title= 'Error', message = "Username not found")
             
-        elif item_Data_Reg["password"] != [n["password"] for n in load_Data_Log[::2] if n["Username"] == item_Data_Reg["Username"]][0]:
+        elif item_Data_Reg["password"] != [n["password"] for n in load_Data_Log if len(n) > 2 and n["Username"] == item_Data_Reg["Username"]][0]:
             messagebox.showerror(title="ERROR", message= "Password doesn't match with your profile")
         else:
                 print("Access granted")
+                usernameE.delete(0, "end")
+                Login_passwordE.delete(0, "end")
     except KeyError as k:
         print("Dodge keyerror")
-  
 
-"""
-1- get contents of username field
-2- loop over the database looking for that username
-3- if the username is not in the database show an error, else advance to step 4
-4- get the contents of the password field, then look for the password assigned to the username mentioned before(i would use a dictionary in the database to store the username-password pairs, the keys would be usernames, and the values would be passwords)
-5- if the password doesnt matches the one assigned to the username show an error, else advance to step 6
-6- finally grant access to the use
-"""
-
-"""
-if what_the_user_typed_as_password not in [n["Username"] for n in data]:
-    print("No profile with that username intialized")
-
-
-
-inp_username = None
-while inp_username not in [n["Username"] for n in data] or ...:  #<--- other edge cases
-    ...   #<--- ask for other username as input in the entry
-
-def validity_check(username,...):
-    if username not in [n["Username"] for n in data] or ...:
-        print("Invalid username")
-        return
-    if password ...:
-        print(...)
-        return
-    ...
-    print("successfully logged in!")
-    call_some_other_function_to_proceed()
-
-
-submit_button = Button(...,command=submit(usernameEntry.get(),passwordEntry.get()))
-
-def submit(username,entry):
-    if validitycheck(username,entry):
-        ... #destroy entries etc. and proceed
-    else:
-        ... #spit out error and clear entries
-"""
-
-
-"""
-item_Data_Reg["Username"] = usernameE.get()
-for usernames in item_Data_Reg["Username"]:
-    if not usernames in item_Data_Log["username"]:
-        tk.messagbox.showwarning(title= "Error", message= "User does not exist")
-
-
-item_Data_Reg["password"] = passE.get()
-for passwords in item_Data_Reg["password"]:
-    
-"""
-
-    
-        
-    
-
-
-
-#def NotEquealsCre():
-   # if every != usrE.get():
-    #    ttk.messagebox.showwarning(root, title='Warning', message='Please enter credentials, alike the ones you created')
-      #  return False
-       # print('False, oh oh it means it exist tclerror')
-
-    
-        #print('There might be tclerror among your code')
-    ##
-      # ttk.messagebox.showwarning(root, tilte='Warning', message='please enter credentials, alike the ones you created.')
-    #else:
-      #  save_data()
-       # return 'valid'
-
-#with open('jsonFile.json', 'r') as f:
- # info = json.read(f)
-#user = tkinterEntryUsername.get()
-#if tkinterEntryPassword == info['users'][user][password]:
- # do whatever
-#------------------------------- here I left of
-
-#lastnameE = ttk.Entry(pim, background='white', justify='left', font=(25))
-#lastnameE.place(x= 490, y=125, width=250, height= 35)
-
-#lastnameEinfo = lastnameE.get()
-
-"""
-after the user finishes registering you will store a email-password pair(maybe using a dictionary, ex : emails[usr_email] = password)
-
-and when the user tries logging in, first check the email they entered, if the email they entered is one of the registered emails(you can check that using emails.keys()), then try to the if the password matches too, as before the password is the value of the key which is the email, so to access the password we do emails[usr_email] and them compare, ex:
-if emails[usr_email] == usrE.get()
-this is generally what u need to do, experiment with it if you wanna
-and to show warnings if the email/password dont match with the stored ones here's a general to do list:
-1- check if the entered email is one of the stored emails, if so proceed to step 2, if not show a warning
-2- look in the database and check if the entered password is the password of the entered email(i explained it in the previous message), if so proceed to step 3, if not show a warning
-3- finally login the user
-i
-
-"""
     
 # A part of the global statement
 path = ttk.Label(root, text = "", background ='#323550', font = ('Times New Roman', 15))
@@ -543,10 +366,3 @@ root.update()
 print(root.winfo_width(), root.winfo_height(), root.winfo_geometry())
 
 root.mainloop()
-
-#The modes are:
-
-#‘r’ – Python read file. Read mode which is used when the file is only being read
-#‘w’ – Python write file. Write mode which is used to edit and write new information to the file (any existing files with the same name will be erased when this mode is activated)
-#‘a’ – Python append file. Append mode, which is used to add new data to the end of the file; that is new information is automatically amended to the end
-#‘r+’ – Special read and write mode, which is used to handle both actions when working with a file
