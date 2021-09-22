@@ -4,22 +4,10 @@ from tkinter import *
 from tkinter import ttk
 
 
-
 root = tk.Tk()
 root.geometry("345x380")
 string_data = StringVar()
 operator = ""
-
-
-# defing button + parameter
-# global var
-# assign empty operator with empty operator + converted string+parameter
-#StringVar has to be set to the data
-# StringVar Holds strings, and the default value of it.
-
-#The theory behind it is what I call string games.
-# String games is Addding and manipulating strings to acheive what u want.
-
 
 def but_clicked(numbers):
         global operator
@@ -31,24 +19,11 @@ def but_clear():
     operator = ""
     string_data.set(operator)
 
-# to sum it I use to globalise the operator
-# because then I can access an empty string and it will be universal for the commands and buttons
-# I converted str and eval on empty string then I assigned it to a variable
-# I had to convert eval on empty string to do basic calculations.
-# then I set the strings value to the variable these_sums which do basic calculations 
 def sum():
     global operator
     these_sums = eval(operator)
     string_data.set(these_sums)
     
-    
-   
-    
-
-
-    
-
-
 E = Entry(root, font=("arial", 20, "bold"), bg= "dark red", insertwidth=4, textvariable= string_data, bd=30, justify="right", width=19)
 E.grid(columnspan=4)
 
